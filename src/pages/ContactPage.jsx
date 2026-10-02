@@ -33,7 +33,11 @@ export default function ContactPage() {
       setSubmitted(true);
       reset();
     } catch (err) {
-      setServerError(err.response?.data?.message || 'Failed to submit enquiry. Please try again.');
+      const apiErrors = err.response?.data?.errors;
+      const errorMessage = Array.isArray(apiErrors)
+        ? apiErrors.map(e => e.msg || e.message).join('. ')
+        : err.response?.data?.message || err.message || 'Failed to submit enquiry. Please try again.';
+      setServerError(errorMessage);
     }
   };
 
